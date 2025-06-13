@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\BookRepository;
+use App\Repositories\BookRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(BookRepositoryInterface::class, BookRepository::class);
     }
 
     /**

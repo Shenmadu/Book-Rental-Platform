@@ -3,48 +3,50 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\BookRequest;
-use App\Models\Book;
 use App\Http\Resources\BookResource;
+use App\Services\BookService;
 
 class BookController extends Controller
 {
+    protected $bookService;
+
+    public function __construct(BookService $bookService)
+    {
+        $this->bookService = $bookService;
+    }
+
     public function index()
     {
-        $books = Book::paginate(10);
+        $books = $this->bookService->getAllBooks([]);
         return BookResource::collection($books);
     }
 
-
     public function show($id)
     {
-        $book = Book::findOrFail($id);
+        $book = $this->bookService->getBookById($id);
         return new BookResource($book);
     }
 
     public function store(BookRequest $request)
     {
-        $book = Book::create($request->validated());
+        $book = $this->bookService->createBook($request->validated());
         return new BookResource($book);
     }
 
     public function rent($id)
     {
-        $book = Book::findOrFail($id);
-        if (!$book->is_available) {
-            return response()->json(['message' => 'Book is already rented'], 422);
+        try {
+            $book = $this->bookService->rentBook($id);
+            return new BookResource($book);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
         }
-        $book->is_available = false;
-        $book->save();
-        return new BookResource($book);
     }
 
     public function returnBook($id)
     {
-        $book = Book::findOrFail($id);
-        $book->is_available = true;
-        $book->save();
+        $book = $this->bookService->returnBook($id);
         return new BookResource($book);
     }
 }
