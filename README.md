@@ -62,6 +62,29 @@ php artisan migrate
 
 # (Optional) Seed sample data
 php artisan db:seed
+php artisan db:seed --class=BookSeeder
 
 # Start the Laravel server
 php artisan serve
+
+## 📦 Frontend (React) Setup
+
+### Prerequisites
+
+- Node.js (v18+ recommended)
+- npm
+
+### 📁 Installation & Setup
+
+```bash
+# 1. Navigate to the frontend folder
+cd book-rental-frontend
+
+# 2. Install dependencies
+npm install
+
+# 3. Start the development server
+npm run dev
+
+# 4. Open in browser
+Visit: http://localhost:5173
